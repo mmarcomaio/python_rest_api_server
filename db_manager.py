@@ -15,7 +15,7 @@ sql_create_table_query = 'CREATE TABLE IF NOT EXISTS {} ('.format(config.TABLE_N
 Path(config.DB.get('path')).mkdir(parents=True, exist_ok=True)
 
 # Connect to local db
-conn = sqlite3.connect(os.path.join(config.DB.get('path'), config.DB.get('name')))
+conn = sqlite3.connect(os.path.join(config.DB.get('path'), config.DB.get('name')), check_same_thread=False)
 
 # Create table if not exists
 try:

@@ -1,6 +1,6 @@
 # python_rest_api_server
 ## Requirements
-* [python 3.8+](https://www.python.org/downloads/release/python-380/)
+* [python 3.5+](https://www.python.org/downloads/release/python-350/)
 
 ### Clone the repository and enter it
 
@@ -13,7 +13,7 @@ python3 -m venv server_env
 # windows
 . server_env/bin/activate.bat
 
-python -m pip install –-upgrade pip
+pip install –-upgrade pip
 ```
 * flask installed in the virtual environment
 ```
