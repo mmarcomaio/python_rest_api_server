@@ -11,7 +11,7 @@ python3 -m venv server_env
 # linux
 . server_env/bin/activate
 # windows
-. server_env/bin/activate.bat
+server_env\Scripts\activate.bat
 
 pip install –-upgrade pip
 ```
@@ -27,5 +27,5 @@ python rest_api_server.py
 
 ### How to launch the unit tests
 ```
-python -m unittest db_manager_test.py -v
+python -m unittest discover -p "*_test.py" -v
 ```

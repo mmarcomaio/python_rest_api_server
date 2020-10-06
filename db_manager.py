@@ -44,7 +44,7 @@ def get_search_parameters(search_filters, update=False):
 def get_users(search_filters=None):
     all_columns = config.DB_ATTRIBUTES
     sql_select_query = 'SELECT * FROM {}'.format(config.TABLE_NAME)
-
+	
     keys_to_ignore, sql_search_params, sql_search_values = get_search_parameters(search_filters)
     if len(sql_search_params):
         sql_select_query += ' WHERE ' + ' AND '.join(sql_search_params)
