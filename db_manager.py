@@ -4,6 +4,7 @@ from pathlib import Path
 import config
 import sqlite3
 import logging
+import logging_messages as lm
 from collections import OrderedDict
 import json
 
@@ -25,7 +26,7 @@ except sqlite3.Error as e:
     logging.error(e)
 
 
-def get_search_parameters(search_filters, update=False):
+def get_search_parameters(search_filters):
     ignore_keys = []
     keep_keys = []
     keep_values = []
@@ -42,6 +43,8 @@ def get_search_parameters(search_filters, update=False):
 
 
 def get_users(search_filters=None):
+    logging.info(lm.ACTION_REQUESTED.format('GET'))
+
     all_columns = config.DB_ATTRIBUTES
     sql_select_query = 'SELECT * FROM {}'.format(config.TABLE_NAME)
 	
@@ -63,6 +66,8 @@ def get_users(search_filters=None):
 
 
 def insert_user(json_user):
+    logging.info(lm.ACTION_REQUESTED.format('INSERT'))
+
     sql_insert_query = "INSERT INTO {} ({}) VALUES({})".format(config.TABLE_NAME, \
                                                   ', '.join("'{0}'".format(k) for k in list(json_user.keys())), \
                                                   ', '.join("'{0}'".format(v) for v in list(json_user.values())))
@@ -77,12 +82,17 @@ def insert_user(json_user):
 
 
 def update_user(user_id, update_filter):
+    if not user_id:
+        logging.debug(lm.NO_USER_ID)
+        return lm.NO_USER_ID
+
+    logging.info(lm.ACTION_REQUESTED_FOR_ID.format('UPDATE', str(user_id)))
     sql_update_query = "UPDATE {} SET ".format(config.TABLE_NAME)
 
-    keys_to_ignore, sql_update_params, sql_update_values = get_search_parameters(update_filter, update=True)
+    keys_to_ignore, sql_update_params, sql_update_values = get_search_parameters(update_filter)
 
     if not sql_update_params:
-        return "{}: invalid parameters. Please re-try with valid parameters".format(','.join(keys_to_ignore))
+        return lm.INVALID_PARAM.format(','.join(keys_to_ignore))
 
     sql_update_query += ', '.join(sql_update_params) + ' WHERE {} = ?'.format(config.DB_PRIMARY_KEY)
     sql_update_values.append(user_id)
@@ -94,3 +104,19 @@ def update_user(user_id, update_filter):
         logging.error(e)
         return(str(e))
     return 'User ID {} updated correctly. Ignored parameters: {}'.format(user_id, ','.join(keys_to_ignore))
+
+
+def delete_user(user_id):
+    if not user_id:
+        logging.debug(lm.NO_USER_ID)
+        return lm.NO_USER_ID
+
+    logging.info(lm.ACTION_REQUESTED_FOR_ID.format('DELETE', user_id))
+    sql_delete_query = "DELETE from {} WHERE {} = ?".format(config.TABLE_NAME, config.DB_PRIMARY_KEY)
+    try:
+        c.execute(sql_delete_query, tuple([user_id]))
+        conn.commit()
+    except sqlite3.Error as e:
+        logging.error(e)
+        return(str(e))
+    return 'User ID {} deleted correctly.'.format(user_id)

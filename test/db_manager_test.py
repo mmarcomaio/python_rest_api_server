@@ -3,6 +3,7 @@ import random
 import string
 import unittest
 import db_manager as dbm
+import logging_messages as lm
 from werkzeug.datastructures import MultiDict, ImmutableMultiDict
 
 def get_random_string(length):
@@ -93,6 +94,17 @@ class TestDbManager(unittest.TestCase):
         # Verify that the second attempt of inserting the user will fail, because of the existing email
         self.assertEqual(dbm.insert_user(user), 'UNIQUE constraint failed: users.email')
 
+
+    def test_insert_partial_parameters(self):
+        # Generate random string for the email (as it has to be 'unique')
+        random_email = get_random_string(16)
+        # Input data
+        user = {'name': 'Sean', 'email': random_email, 'password': 'easypass' }
+
+        # Verify that an error is thrown. All fields are mandatory for the insertion.
+        self.assertEqual(dbm.insert_user(user), 'NOT NULL constraint failed: users.address')
+
+
     def test_get_all_elements(self):
         # Insert 2 elements in the table
         random_email = get_random_string(16)
@@ -164,6 +176,16 @@ class TestDbManager(unittest.TestCase):
         self.assertTrue('surname' in key_to_ignore)
         self.assertTrue('telephone' in key_to_ignore)
 
+    def test_update_user_no_id(self):
+        # Input data
+        user_id = None
+        data = MultiDict()
+        # Update the user without specifying the ID
+        out_message = dbm.update_user(user_id, data)
+
+        # Verify that the proper error message is thrown
+        self.assertEqual(out_message, lm.NO_USER_ID)
+
     def test_update_user(self):
         # Insert 1 element in the table
         random_email = get_random_string(16)
@@ -187,7 +209,7 @@ class TestDbManager(unittest.TestCase):
         data2.add('id', id_to_update)
         data2 = ImmutableMultiDict(data)
 
-        users, key_to_ignore = dbm.get_users(data)
+        users, key_to_ignore = dbm.get_users(data2)
 
         # Retrieve the user and verify its content correspond to the updated values
         updated_user = list(json.loads(users).values())[0]
@@ -195,6 +217,34 @@ class TestDbManager(unittest.TestCase):
         self.assertEqual(updated_user.get('email'), new_email)
         self.assertEqual(updated_user.get('password'), 'easypass')
         self.assertEqual(updated_user.get('address'), new_address)
+
+    def test_delete_user_after_insertion(self):
+        # Input data
+        user = {'name': 'Mike', 'email': 'mike@yahoo.com', 'address': '6th avenue - New York', 'password': '123456' }
+
+        # Insert user in the table
+        user_id_to_remove = dbm.insert_user(user)
+
+        # Instantiate get filter by ID
+        data = MultiDict()
+        data.add('id', user_id_to_remove)
+        data = ImmutableMultiDict(data)
+
+        # get all users
+        users, key_to_ignore = dbm.get_users(data)
+
+        # Verify that the user has been properly inserted
+        self.assertEqual(len(json.loads(users)), 1)
+
+        # Remove the user with the same ID
+        dbm.delete_user(user_id_to_remove)
+
+        # Re-retrieve the user with above user ID
+        users, key_to_ignore = dbm.get_users(data)
+
+        # Verify that the user has been properly removed
+        self.assertEqual(len(json.loads(users)), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
