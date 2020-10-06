@@ -14,14 +14,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     filename=os.path.basename(__file__) + time.strftime("-%Y-%m-%d.log"))
 
-root = logging.getLogger()
-root.setLevel(logging.DEBUG)
-
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-root.addHandler(handler)
 
 @api.route('/users', methods=['GET'])
 def get_users():
