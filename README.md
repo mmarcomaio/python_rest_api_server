@@ -45,7 +45,7 @@ python -m unittest discover -p "*_test.py" -v
 * Import the collection, containing the system tests
 ![Collection import in Postman](img/import_collection_postman.png?raw=true "Collection_import")
 * and now you are ready to run the tests
-** Select them from the right column
-** Click on "Send" to run the tests
-** Check the result by clicking on "Test Results"
+  * Select them from the right column
+  * Click on "Send" to run the tests
+  * Check the result by clicking on "Test Results"
 ![Run tests in Postman](img/run_tests.png?raw=true "Run_tests")
