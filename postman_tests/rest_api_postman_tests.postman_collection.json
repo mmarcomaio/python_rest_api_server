@@ -1,0 +1,444 @@
+{
+	"info": {
+		"_postman_id": "a1cf9860-19cf-4335-9dde-d36b754423a8",
+		"name": "rest_api_postman_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Insert User Valid Parameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c02f6798-0a18-4c04-ab83-bfcc764ad7ca",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\": \"update_email1@yahoo.it\", \"password\": \"123456\", \"name\": \"YourName\", \"address\": \"via Nenni 65\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert User Valid Parameters 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "02d8dace-08f2-43f4-bdce-752173d9a434",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\": \"update_email2@yahoo.it\", \"password\": \"123456\", \"name\": \"YourName2\", \"address\": \"via Nenni 65\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert User Valid Parameters 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fb9e6e24-7b0b-4796-9fcf-1f1cf2baf2d7",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\": \"update_email3@yahoo.it\", \"password\": \"123456\", \"name\": \"YourName3\", \"address\": \"via Nenni 63\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3be806ca-f78d-48a6-8c77-4b3a2115c66b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8fa34de2-5871-4e91-b9cf-edc8fd87e416",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b92c3b24-fb8a-4f38-9ce5-5fc2e2412529",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users?email=update_email@yahoo.it",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "update_email@yahoo.it"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by address and password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c0a569f7-1767-4b07-9d06-da020171159f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users?address=via Nenni 65&password=123456",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "address",
+							"value": "via Nenni 65"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User With Valid Parameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "506b23f8-baa2-48b1-8f52-99d158ffebeb",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users/2?email=test@test.com&name=Sharon",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users",
+						"2"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@test.com"
+						},
+						{
+							"key": "name",
+							"value": "Sharon"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert User with Invalid Parameters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef907f70-3731-401a-8ca7-cb7e1312c5a9",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"  pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"emails\": \"update_email1@yahoo.it\", \"pwd\": \"123456\", \"name\": \"YourName\", \"address\": \"via Nenni 65\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "92a95a32-9029-4b00-833d-bcf4d1c3208a",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"  pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"emails\": \"update_email1@yahoo.it\", \"pwd\": \"123456\", \"name\": \"YourName\", \"address\": \"via Nenni 65\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users/2",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e15f8466-9eb8-4419-8e22-b76a81770f83",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users",
+					"host": [
+						"{{REST_API_IP}}"
+					],
+					"port": "{{REST_API_PORT}}",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

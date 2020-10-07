@@ -7,6 +7,14 @@ import logging
 import logging_messages as lm
 from collections import OrderedDict
 import json
+import time
+
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    level=logging.DEBUG,
+    filename=os.path.basename(__file__) + time.strftime("-%Y-%m-%d.log"))
 
 
 sql_create_table_query = 'CREATE TABLE IF NOT EXISTS {} ('.format(config.TABLE_NAME) +\
@@ -49,6 +57,8 @@ def get_users(search_filters=None):
     sql_select_query = 'SELECT * FROM {}'.format(config.TABLE_NAME)
 	
     keys_to_ignore, sql_search_params, sql_search_values = get_search_parameters(search_filters)
+    logging.debug(lm.DATA_STRUCTURES.format(keys_to_ignore, sql_search_params, sql_search_values))
+
     if len(sql_search_params):
         sql_select_query += ' WHERE ' + ' AND '.join(sql_search_params)
 
@@ -90,6 +100,7 @@ def update_user(user_id, update_filter):
     sql_update_query = "UPDATE {} SET ".format(config.TABLE_NAME)
 
     keys_to_ignore, sql_update_params, sql_update_values = get_search_parameters(update_filter)
+    logging.debug(lm.DATA_STRUCTURES.format(keys_to_ignore, sql_update_params, sql_update_values))
 
     if not sql_update_params:
         return lm.INVALID_PARAM.format(','.join(keys_to_ignore))
@@ -103,7 +114,7 @@ def update_user(user_id, update_filter):
     except sqlite3.Error as e:
         logging.error(e)
         return(str(e))
-    return 'User ID {} updated correctly. Ignored parameters: {}'.format(user_id, ','.join(keys_to_ignore))
+    return int(user_id)
 
 
 def delete_user(user_id):
@@ -119,4 +130,4 @@ def delete_user(user_id):
     except sqlite3.Error as e:
         logging.error(e)
         return(str(e))
-    return 'User ID {} deleted correctly.'.format(user_id)
+    return int(user_id)

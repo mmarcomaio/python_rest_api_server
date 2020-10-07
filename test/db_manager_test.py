@@ -11,14 +11,16 @@ def get_random_string(length):
     return ''.join(random.choice(letters) for i in range(length))
 
 
+def get_data(parameters):
+    d = MultiDict()
+    for k, v in parameters.items():
+        d.add(k, v)
+    return ImmutableMultiDict(d)
+
+
 class TestDbManager(unittest.TestCase):
     def test_invalid_search_parameters(self):
-        # Input data
-        data = MultiDict()
-        data.add('addresses', '8 avenue Bellevue - New York')
-        data.add('names', 'John')
-        data.add('surname', 'Mayer')
-        data = ImmutableMultiDict(data)
+        data = get_data({'addresses': '8 avenue Bellevue - New York', 'names': 'John', 'surname': 'Mayer'})
 
         # Call the function to test
         keys_to_ignore, sql_search_params, sql_search_values = dbm.get_search_parameters(data)
@@ -32,11 +34,7 @@ class TestDbManager(unittest.TestCase):
 
     def test_all_valid_search_parameters(self):
         # Input data
-        data = MultiDict()
-        data.add('address', '8 avenue Bellevue - New York')
-        data.add('name', 'John')
-        data.add('email', 'john@yahoo.com')
-        data = ImmutableMultiDict(data)
+        data = get_data({'address': '8 avenue Bellevue - New York', 'name': 'John', 'email': 'john@yahoo.com'})
 
         # Call the function to test
         keys_to_ignore, sql_search_params, sql_search_values = dbm.get_search_parameters(data)
@@ -55,11 +53,7 @@ class TestDbManager(unittest.TestCase):
 
     def test_valid_invalid_search_parameters(self):
         # Input data
-        data = MultiDict()
-        data.add('address', '8 avenue Bellevue - New York')
-        data.add('name', 'John')
-        data.add('surname', 'Mayer')
-        data = ImmutableMultiDict(data)
+        data = get_data({'address': '8 avenue Bellevue - New York', 'name': 'John', 'surname': 'Mayer'})
 
         # Call the function to test
         keys_to_ignore, sql_search_params, sql_search_values = dbm.get_search_parameters(data)
@@ -105,8 +99,8 @@ class TestDbManager(unittest.TestCase):
         self.assertEqual(dbm.insert_user(user), 'NOT NULL constraint failed: users.address')
 
 
-    def test_get_all_elements(self):
-        # Insert 2 elements in the table
+    def test_get_all_users(self):
+        # Insert 2 users in the table
         random_email = get_random_string(16)
         random_email2 = get_random_string(16)
         # Input data
@@ -122,8 +116,8 @@ class TestDbManager(unittest.TestCase):
         # Verify we have at least 2 users
         self.assertGreater(len(json.loads(users)), 1)
 
-    def test_get_element_by_email(self):
-        # Insert 2 elements in the table
+    def test_get_user_by_email(self):
+        # Insert 2 users in the table
         random_email = get_random_string(16)
         random_email2 = get_random_string(16)
         # Input data
@@ -134,14 +128,12 @@ class TestDbManager(unittest.TestCase):
         dbm.insert_user(user2)
 
         # instantiate the filter
-        data = MultiDict()
-        data.add('email', random_email)
-        data = ImmutableMultiDict(data)
+        data = get_data({'email': random_email})
 
         # get all users
         users, key_to_ignore = dbm.get_users(data)
 
-        # Being the email unique, there will be only one element returned
+        # Being the email unique, there will be only one user returned
         self.assertEqual(len(json.loads(users)), 1)
 
         # Retrieve the user and verify its content correspond to user1
@@ -152,8 +144,8 @@ class TestDbManager(unittest.TestCase):
         self.assertEqual(user.get('address'), '14 av Bellevue - New York')
 
 
-    def test_get_element_by_all_invalid_parameters(self):
-        # Insert 1 element in the table
+    def test_get_user_by_all_invalid_parameters(self):
+        # Insert 1 user in the table
         random_email = get_random_string(16)
         # Input data
         user = {'name': 'John', 'email': random_email, 'address': '14 av Bellevue - New York', 'password': 'easypass' }
@@ -161,11 +153,7 @@ class TestDbManager(unittest.TestCase):
         dbm.insert_user(user)
 
         # instantiate the filter with only invalid parameters
-        data = MultiDict()
-        data.add('email2', random_email)
-        data.add('surname', 'Ronny')
-        data.add('telephone', '0123456')
-        data = ImmutableMultiDict(data)
+        data = get_data({'email2': random_email, 'surname': 'Ronny', 'telephone': '0123456'})
 
         # get all users
         users, key_to_ignore = dbm.get_users(data)
@@ -179,7 +167,7 @@ class TestDbManager(unittest.TestCase):
     def test_update_user_no_id(self):
         # Input data
         user_id = None
-        data = MultiDict()
+        data = get_data({})
         # Update the user without specifying the ID
         out_message = dbm.update_user(user_id, data)
 
@@ -187,7 +175,7 @@ class TestDbManager(unittest.TestCase):
         self.assertEqual(out_message, lm.NO_USER_ID)
 
     def test_update_user(self):
-        # Insert 1 element in the table
+        # Insert 1 user in the table
         random_email = get_random_string(16)
         # Input data
         user = {'name': 'John', 'email': random_email, 'address': '14 av Bellevue - New York', 'password': 'easypass' }
@@ -195,19 +183,14 @@ class TestDbManager(unittest.TestCase):
         id_to_update = dbm.insert_user(user)
 
         # instantiate the filter
-        data = MultiDict()
         new_email = get_random_string(16)
         new_address = '14 av Belorizonte - Toronto'
-        data.add('email', new_email)
-        data.add('address', new_address)
-        data = ImmutableMultiDict(data)
+        data = get_data({'email': new_email, 'address': new_address})
 
         dbm.update_user(id_to_update, data)
 
         # Search the updated user, by ID
-        data2 = MultiDict()
-        data2.add('id', id_to_update)
-        data2 = ImmutableMultiDict(data)
+        data2 = get_data({'id': id_to_update})
 
         users, key_to_ignore = dbm.get_users(data2)
 
@@ -226,9 +209,7 @@ class TestDbManager(unittest.TestCase):
         user_id_to_remove = dbm.insert_user(user)
 
         # Instantiate get filter by ID
-        data = MultiDict()
-        data.add('id', user_id_to_remove)
-        data = ImmutableMultiDict(data)
+        data = get_data({'id': user_id_to_remove})
 
         # get all users
         users, key_to_ignore = dbm.get_users(data)
