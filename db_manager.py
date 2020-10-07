@@ -34,6 +34,10 @@ except sqlite3.Error as e:
     logging.error(e)
 
 
+def get_search_values(input_value):
+    return input_value.split(config.MULTIPLE_VALUE_DELIMETER)
+
+
 def get_search_parameters(search_filters):
     ignore_keys = []
     keep_keys = []
@@ -44,9 +48,13 @@ def get_search_parameters(search_filters):
             if key not in config.DB_ATTRIBUTES:
                 ignore_keys.append(key)
             else:
-                keep_keys.append(key + ' = ?')
-                keep_values.append(search_filters[key])
-
+                search_values = get_search_values(str(search_filters[key]))
+                search_values_length = len(search_values)
+                keep_values.extend(search_values)
+                key_to_append = key + ' = ?' 
+                if search_values_length > 1:
+                    key_to_append = '({})'.format(' OR '.join(search_values_length*[key_to_append]))
+                keep_keys.append(key_to_append)
     return ignore_keys, keep_keys, keep_values
 
 
@@ -64,6 +72,7 @@ def get_users(search_filters=None):
 
     users = {}
     try:
+        logging.debug([sql_select_query, tuple(sql_search_values)])
         rows = c.execute(sql_select_query, tuple(sql_search_values))
         for row in rows:
             user = OrderedDict(zip(all_columns, list(row)))
@@ -82,6 +91,7 @@ def insert_user(json_user):
                                                   ', '.join("'{0}'".format(k) for k in list(json_user.keys())), \
                                                   ', '.join("'{0}'".format(v) for v in list(json_user.values())))
     try:
+        logging.debug(sql_insert_query)
         c.execute(sql_insert_query)
         last_id = c.lastrowid
         conn.commit()
@@ -91,6 +101,7 @@ def insert_user(json_user):
     return last_id
 
 
+# Expected results: user ID when update OK / freetext message in case KO 
 def update_user(user_id, update_filter):
     if not user_id:
         logging.debug(lm.NO_USER_ID)
@@ -109,6 +120,7 @@ def update_user(user_id, update_filter):
     sql_update_values.append(user_id)
 
     try:
+        logging.debug([sql_update_query, tuple(sql_update_values)])
         c.execute(sql_update_query, tuple(sql_update_values))
         conn.commit()
     except sqlite3.Error as e:
@@ -125,6 +137,7 @@ def delete_user(user_id):
     logging.info(lm.ACTION_REQUESTED_FOR_ID.format('DELETE', user_id))
     sql_delete_query = "DELETE from {} WHERE {} = ?".format(config.TABLE_NAME, config.DB_PRIMARY_KEY)
     try:
+        logging.debug([sql_delete_query, tuple([user_id])])
         c.execute(sql_delete_query, tuple([user_id]))
         conn.commit()
     except sqlite3.Error as e:

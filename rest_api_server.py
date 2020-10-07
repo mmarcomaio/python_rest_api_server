@@ -25,13 +25,14 @@ def get_data(parameters):
 
 @api.route('/users', methods=['GET'])
 def get_users():
-    logging.debug('Received following arguments: {}'.format(str(req.args)))
+    logging.debug('[GET]Received following arguments: {}'.format(str(req.args)))
     users, _ = dbm.get_users(req.args)
     return users
 
 
 @api.route('/users/<user_id>', methods=['GET'])
 def get_user_by_id(user_id):
+    logging.debug('[GET]Received following ID: {}'.format(user_id))
     data = get_data({config.DB_PRIMARY_KEY: user_id})
     users, keys_to_ignore = dbm.get_users(data)
     return users
@@ -41,6 +42,7 @@ def get_user_by_id(user_id):
 def create_user():
     if not req.json:
         return ("Missing JSON format input parameters"), 400
+    logging.debug('[POST]Received following data: {}'.format(json.dumps(req.json)))
     new_item_id = dbm.insert_user(req.json)
 
     if isinstance(new_item_id, str):
@@ -50,6 +52,7 @@ def create_user():
 
 @api.route('/users/<user_id>', methods=['PUT'])
 def update_user(user_id):
+    logging.debug('[UPDATE]User ID {} to be updated with following arguments: {}'.format(user_id, str(req.args)))
     updated_user_id = dbm.update_user(user_id, req.args)
     if isinstance(updated_user_id, str):
         return (updated_user_id), 400
@@ -58,6 +61,7 @@ def update_user(user_id):
 
 @api.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
+    logging.debug('[DELETE]User ID {} to be deleted'.format(user_id))
     deleted_user_id = dbm.delete_user(user_id)
     if isinstance(deleted_user_id, str):
         return (deleted_user_id), 400

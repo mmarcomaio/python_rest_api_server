@@ -6,7 +6,9 @@ DB = {
     'path': os.path.join(os.getcwd(), 'data'),
 }
 
+TABLE_NAME = 'users'
 DB_PRIMARY_KEY = 'id'
+MULTIPLE_VALUE_DELIMETER = ','
 
 DB_COLUMNS = [
     (DB_PRIMARY_KEY, 'INTEGER'),
@@ -18,7 +20,6 @@ DB_COLUMNS = [
 
 DB_ATTRIBUTES = [x[0] for x in DB_COLUMNS]
 
-TABLE_NAME = 'users'
 
 SERVER_IP_ADDRESS = '192.168.0.49'
 SERVER_PORT_NUMBER = 4322
