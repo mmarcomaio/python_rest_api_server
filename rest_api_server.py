@@ -1,6 +1,7 @@
 from flask import Flask, json, request as req
 import config
 import db_manager as dbm
+import rules_checker as rc
 import logging
 import os
 import time
@@ -43,6 +44,10 @@ def create_user():
     if not req.json:
         return ("Missing JSON format input parameters"), 400
     logging.debug('[POST]Received following data: {}'.format(json.dumps(req.json)))
+
+    visitor_country = rc.get_country_from_ip(req.remote_addr)
+    if not rc.is_country_allowed(req.remote_addr):
+        return ("{} visitor's country is not allowed to perform this operation".format(visitor_country)), 400
     new_item_id = dbm.insert_user(req.json)
 
     if isinstance(new_item_id, str):

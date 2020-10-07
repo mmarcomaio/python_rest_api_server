@@ -20,6 +20,9 @@ DB_COLUMNS = [
 
 DB_ATTRIBUTES = [x[0] for x in DB_COLUMNS]
 
+WHITE_LIST_COUNTRIES = ['CH']
+
 ######### DATA TO BE UPDATED BY THE USER ############
+WHITE_LIST_OVERRIDE = False     # To be set to True during the system tests
 SERVER_IP_ADDRESS = '127.0.0.1' # YOUR_SERVER_IP_ADDRESS
 SERVER_PORT_NUMBER = 4322       # YOUR_SERVER_PORT_NUMBER
