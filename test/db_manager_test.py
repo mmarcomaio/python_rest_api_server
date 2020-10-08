@@ -6,6 +6,7 @@ import db_manager as dbm
 import logging_messages as lm
 from werkzeug.datastructures import MultiDict, ImmutableMultiDict
 
+
 def get_random_string(length):
     letters = string.ascii_letters
     return ''.join(random.choice(letters) for i in range(length))

@@ -63,7 +63,7 @@ def get_users(search_filters=None):
 
     all_columns = config.DB_ATTRIBUTES
     sql_select_query = 'SELECT * FROM {}'.format(config.TABLE_NAME)
-	
+
     keys_to_ignore, sql_search_params, sql_search_values = get_search_parameters(search_filters)
     logging.debug(lm.DATA_STRUCTURES.format(keys_to_ignore, sql_search_params, sql_search_values))
 

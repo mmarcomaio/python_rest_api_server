@@ -1,6 +1,7 @@
 from flask import Flask, json, request as req
 import config
 import db_manager as dbm
+import kafka_manager as km
 import rules_checker as rc
 import logging
 import os
@@ -8,7 +9,8 @@ import time
 from werkzeug.datastructures import MultiDict, ImmutableMultiDict
 
 api = Flask(__name__)
-
+if config.KAFKA_ACTIVE_SERVER:
+    kafka_producer = km.KProducer(config.KAFKA_SERVER_IP, config.KAFKA_SERVER_PORT, config.KAFKA_TOPIC)
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -22,6 +24,13 @@ def get_data(parameters):
     for k, v in parameters.items():
         d.add(k, v)
     return ImmutableMultiDict(d)
+
+
+def handle_kafka_notification(mutation_type, mutation_content, request):
+    if not config.KAFKA_ACTIVE_SERVER:
+        return 'Kafka Server not activated'
+    mutation_event = km.KEvent(mutation_type, mutation_content, request)
+    kafka_producer.send_event(mutation_event.__dict__)
 
 
 @api.route('/users', methods=['GET'])
@@ -52,6 +61,9 @@ def create_user():
 
     if isinstance(new_item_id, str):
         return (new_item_id), 400
+
+    handle_kafka_notification('CREATE_USER', new_item_id, req)
+
     return ({config.DB_PRIMARY_KEY: new_item_id}), 201
 
 
@@ -61,6 +73,9 @@ def update_user(user_id):
     updated_user_id = dbm.update_user(user_id, req.args)
     if isinstance(updated_user_id, str):
         return (updated_user_id), 400
+
+    handle_kafka_notification('UPDATE_USER', updated_user_id, req)
+
     return ({config.DB_PRIMARY_KEY: updated_user_id}), 200
 
 
@@ -70,6 +85,9 @@ def delete_user(user_id):
     deleted_user_id = dbm.delete_user(user_id)
     if isinstance(deleted_user_id, str):
         return (deleted_user_id), 400
+
+    handle_kafka_notification('DELETE_USER', deleted_user_id, req)
+
     return ({config.DB_PRIMARY_KEY: deleted_user_id}), 200
 
 
