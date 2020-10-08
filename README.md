@@ -46,6 +46,55 @@ pip install kafka-python
 </details>
 
 ## Execution
+### Configuration
+
+<details>
+<summary>Click to expand</summary>
+
+As administrator of the REST API server you can customize its behavior by updating the configuration file (config.py) located at the root of the repository.
+
+* <strong>DB schema:</strong> you can change any of the following parameters and the software will automatically benefit from it
+
+```python
+DB = {
+    'name': 'users.db',
+    'path': os.path.join(os.getcwd(), 'data'),
+}
+TABLE_NAME = 'users'
+DB_PRIMARY_KEY = 'id'
+DB_COLUMNS = [
+    (DB_PRIMARY_KEY, 'INTEGER'),
+    ('name', 'TEXT NOT NULL'),
+    ('email', 'TEXT NOT NULL UNIQUE'),
+    ('password', 'TEXT NOT NULL'),
+    ('address', 'TEXT NOT NULL')
+]
+```
+
+* <strong>User's countries allowed to insert new user:</strong> you can just update the below list
+
+```python
+WHITE_LIST_COUNTRIES = ['CH']
+```
+
+* <strong>Server(s) network data</strong> 
+```python
+SERVER_IP_ADDRESS = '127.0.0.1'          # YOUR_SERVER_IP_ADDRESS
+SERVER_PORT_NUMBER = 4322                # YOUR_SERVER_PORT_NUMBER
+KAFKA_SERVER_IP = '192.168.0.21'         # YOUR_KAFKA_SERVER_IP_ADDRESS
+KAFKA_SERVER_PORT = 9092                 # YOUR_KAFKA_SERVER_PORT_NUMBER
+KAFKA_TOPIC = 'my-topic-events-1'        # YOUR_KAFKA_TOPIC_NAME
+```
+
+* <strong>Local testing overriding variables</strong> 
+```python
+######### DATA TO BE UPDATED BY THE USER ############
+WHITE_LIST_OVERRIDE = False              # To be set to True during the system tests
+KAFKA_ACTIVE_SERVER = False              # True if you have a Kafka Server up and running. False otherwise.
+```
+
+</details>
+
 ### How to start the backend
 ```shell
 python -m venv server_env
@@ -94,3 +143,31 @@ python -m unittest discover -p "*_test.py" -v
 </details>
 
 ## API Usage
+* Get users
+  * All users
+```
+curl --location --request GET 'SERVER_IP:SERVER_PORT/users'
+```
+  * Users matching filter
+```
+curl --location --request GET 'SERVER_IP:SERVER_PORT/users?address=USER_ADDRESS&name=USER_NAME'
+```
+* Get specific user
+```
+curl --location --request GET 'SERVER_IP:SERVER_PORT/users/USER_ID'
+```
+* Create new user
+```
+curl --location --request POST 'SERVER_IP:SERVER_PORT/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email": USER_EMAIL, "password": USER_PWD, "name": USER_NAME, "address": USER_ADDRESS}'
+```
+* Update existing user
+```
+curl --location --request PUT 'SERVER_IP:SERVER_PORT/users/USER_ID?email=NEW_USER_EMAIL&name=USER_NAME' \
+--data-raw ''
+```
+* Delete existing user
+```
+curl --location --request DELETE 'SERVER_IP:SERVER_PORT/users/USER_ID'
+```

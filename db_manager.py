@@ -27,6 +27,19 @@ def get_search_values(input_value):
 
 
 def get_search_parameters(search_filters):
+    """ Take the input search filter and
+    extract the valid (according to the DB schema) search parameters
+    while identifying the invalid ones (and ignoring them, not blocking the query).
+
+    :param search_filters: the user's URL search parameters, e.g.: '{email:USER_EMAIL1,EMAIL2, name:USER_NAME}'
+    :type search_filters: dict
+
+    :return:
+            ignore_keys: the user's inserted search parameters which are invalid, as not found in the DB schema
+            keep_keys: the valid search keys specified by the user, pre-formatted for a SQL query
+            keep_values: the valid search values specified by the user, pre-formatted for a SQL query
+    :rtype: list
+    """
     ignore_keys = []
     keep_keys = []
     keep_values = []
@@ -104,7 +117,6 @@ class DbManager:
             return(str(e))
         return last_id
 
-    # Expected results: user ID when update OK / freetext message in case KO
     def update_user(self, user_id, update_filter):
         if not user_id:
             logging.debug(lm.NO_USER_ID)

@@ -21,6 +21,14 @@ logging.basicConfig(
 
 
 def get_data(parameters):
+    """ Transform a dictionary containing search parameters into an ImmutableMultiDict.
+
+    :param parameters: search parameters
+    :type parameters: dict
+
+    :return: same input values, in another format
+    :rtype: ImmutableMultiDict
+    """
     d = MultiDict()
     for k, v in parameters.items():
         d.add(k, v)
@@ -28,6 +36,17 @@ def get_data(parameters):
 
 
 def handle_kafka_notification(mutation_type, mutation_content, request):
+    """ Send a notification to a Kafka topic, if the Kafka server is active
+
+    :param mutation_type: Create/Update/Delete
+    :type mutation_type: str
+
+    :param mutation_content: The output of the request which brought to a db status change
+    :type mutation_content: int, list
+
+    :param request: flask request containing relevant data to send to the topic
+    """
+
     if not config.KAFKA_ACTIVE_SERVER:
         return 'Kafka Server not activated'
     mutation_event = km.KEvent(mutation_type, mutation_content, request)
