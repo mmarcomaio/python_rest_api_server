@@ -1,6 +1,6 @@
 from flask import Flask, json, request as req
 import config
-import db_manager as dbm
+import db_manager
 import kafka_manager as km
 import rules_checker as rc
 import logging
@@ -9,6 +9,7 @@ import time
 from werkzeug.datastructures import MultiDict, ImmutableMultiDict
 
 api = Flask(__name__)
+dbm = db_manager.DbManager()
 if config.KAFKA_ACTIVE_SERVER:
     kafka_producer = km.KProducer(config.KAFKA_SERVER_IP, config.KAFKA_SERVER_PORT, config.KAFKA_TOPIC)
 

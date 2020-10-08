@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
 import json

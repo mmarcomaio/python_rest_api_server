@@ -26,7 +26,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"email\": \"update_email1@yahoo.it\", \"password\": \"123456\", \"name\": \"YourName\", \"address\": \"via Nenni 65\"}",
+					"raw": "{\"email\": \"update_email15@yahoo.it\", \"password\": \"123456\", \"name\": \"Cogni\", \"address\": \"via Nenni 65\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -213,7 +213,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users?email=update_email1@yahoo.it",
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users?email=update_email15@yahoo.it",
 					"host": [
 						"{{REST_API_IP}}"
 					],
@@ -224,7 +224,7 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "update_email1@yahoo.it"
+							"value": "update_email15@yahoo.it"
 						}
 					]
 				}
@@ -322,7 +322,7 @@
 			"response": []
 		},
 		{
-			"name": "Get User by multiple IDs and addresses Copy",
+			"name": "Get User by multiple IDs and addresses",
 			"event": [
 				{
 					"listen": "test",
@@ -341,7 +341,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users?address=via Nenni 65&password=123456",
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users?id=1,2,3&address=via Nenni 65",
 					"host": [
 						"{{REST_API_IP}}"
 					],
@@ -351,12 +351,12 @@
 					],
 					"query": [
 						{
-							"key": "address",
-							"value": "via Nenni 65"
+							"key": "id",
+							"value": "1,2,3"
 						},
 						{
-							"key": "password",
-							"value": "123456"
+							"key": "address",
+							"value": "via Nenni 65"
 						}
 					]
 				}
@@ -392,7 +392,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users/2?email=test@test.com&name=Sharon",
+					"raw": "{{REST_API_IP}}:{{REST_API_PORT}}/users/2?email=ravana@test.com&name=Borga",
 					"host": [
 						"{{REST_API_IP}}"
 					],
@@ -404,11 +404,11 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "test@test.com"
+							"value": "ravana@test.com"
 						},
 						{
 							"key": "name",
-							"value": "Sharon"
+							"value": "Borga"
 						}
 					]
 				}

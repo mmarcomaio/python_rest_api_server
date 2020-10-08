@@ -2,9 +2,11 @@ import json
 import random
 import string
 import unittest
-import db_manager as dbm
+import db_manager
 import logging_messages as lm
 from werkzeug.datastructures import MultiDict, ImmutableMultiDict
+
+dbm = db_manager.DbManager()
 
 
 def get_random_string(length):
@@ -24,7 +26,7 @@ class TestDbManager(unittest.TestCase):
         data = get_data({'addresses': '8 avenue Bellevue - New York', 'names': 'John', 'surname': 'Mayer'})
 
         # Call the function to test
-        keys_to_ignore, sql_search_params, sql_search_values = dbm.get_search_parameters(data)
+        keys_to_ignore, sql_search_params, sql_search_values = db_manager.get_search_parameters(data)
 
         # Verify the output against the expected output
         self.assertTrue('addresses' in keys_to_ignore)
@@ -38,7 +40,7 @@ class TestDbManager(unittest.TestCase):
         data = get_data({'address': '8 avenue Bellevue - New York', 'name': 'John', 'email': 'john@yahoo.com'})
 
         # Call the function to test
-        keys_to_ignore, sql_search_params, sql_search_values = dbm.get_search_parameters(data)
+        keys_to_ignore, sql_search_params, sql_search_values = db_manager.get_search_parameters(data)
 
         # Verify the output against the expected output
         self.assertFalse(keys_to_ignore)
@@ -57,7 +59,7 @@ class TestDbManager(unittest.TestCase):
         data = get_data({'address': '8 avenue Bellevue - New York', 'name': 'John', 'surname': 'Mayer'})
 
         # Call the function to test
-        keys_to_ignore, sql_search_params, sql_search_values = dbm.get_search_parameters(data)
+        keys_to_ignore, sql_search_params, sql_search_values = db_manager.get_search_parameters(data)
 
         # Verify the output against the expected output
         self.assertEqual(['surname'], keys_to_ignore)
