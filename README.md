@@ -1,7 +1,8 @@
 # python_rest_api_server
 ## Requirements
 * [python 3.5+](https://www.python.org/downloads/release/python-350/)
-
+* [JAVA 8 SDK](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html) (for the Kafka Server)
+* [Apache Kafka Binaries](https://kafka.apache.org/downloads)
 ## Installation
 ### Clone the repository and enter it
 
@@ -95,6 +96,69 @@ KAFKA_ACTIVE_SERVER = False              # True if you have a Kafka Server up an
 
 </details>
 
+### Setup and start the Kafka server
+
+<details>
+<summary>Click to expand</summary>
+
+* Download the Kafka binaries from [this link](https://kafka.apache.org/downloads)
+* Create a folder named "kafka" and copy the downloaded file in it
+* Extract them from the tgz file
+```
+tar zxvf the_apache_kafka_binaries.tgz
+```
+* Create a folder named 'data' at the root of the previously created 'kafka' 
+  * This will be used by Zookeeper and Apache Kafka
+* Update zookeeper data directory path in “config/zookeeper.Properties” configuration file
+```
+dataDir=YOUR_KAFKA_DIR_PATH/data/zookeper
+```
+* Update Apache Kafka log file path and network settings in “config/server.properties” configuration file
+```
+log.dirs=YOUR_KAFKA_DIR_PATH/data/kafka
+```
+```
+advertised.listeners=PLAINTEXT://YOUR_KAFKA_SERVER_IP:YOUR_KAFKA_SERVER_PORT
+listeners=PLAINTEXT://0.0.0.0:YOUR_KAFKA_SERVER_PORT
+```
+* Start Zookeper
+
+```
+# Microsoft Windows
+cd YOUR_KAFKA_DIR_PATH\bin\windows
+.\zookeeper-server-start.bat ..\..\config\zookeeper.properties
+
+# Unix
+cd YOUR_KAFKA_DIR_PATH/bin
+./zookeeper-server-start.sh ../config/zookeeper.properties
+```
+* And make sure zookeeper started successfully
+```
+in the stdout you should see something like this after few seconds:
+INFO binding to port 0.0.0.0/0.0.0.0:2181 
+```
+* Start Apache Kafka
+```
+# Microsoft Windows
+cd YOUR_KAFKA_DIR_PATH\bin\windows
+.\kafka-server-start.bat ..\..\config\server.properties
+
+# Unix
+cd YOUR_KAFKA_DIR_PATH/bin
+./kafka-server-start.sh ../config/server.properties
+```
+* Finally you can start a Kafka Consumer to get the topic's event created by the REST API server
+```
+# Microsoft Windows
+cd YOUR_KAFKA_DIR_PATH\bin\windows
+.\kafka-console-consumer.bat --topic YOUR_TOPIC_NAME --from-beginning --bootstrap-server KAFKA_SERVER_IP:KAFKA_SERVER_PORT
+
+# Unix
+cd YOUR_KAFKA_DIR_PATH/bin
+./kafka-console-consumer.sh --topic YOUR_TOPIC_NAME --from-beginning --bootstrap-server KAFKA_SERVER_IP:KAFKA_SERVER_PORT
+```
+</details>
+
 ### How to start the backend
 ```shell
 python -m venv server_env
@@ -145,13 +209,13 @@ python -m unittest discover -p "*_test.py" -v
 ## API Usage
 * Get users
   * All users
-```
-curl --location --request GET 'SERVER_IP:SERVER_PORT/users'
-```
-  * Users matching filter
-```
-curl --location --request GET 'SERVER_IP:SERVER_PORT/users?address=USER_ADDRESS&name=USER_NAME'
-```
+  ```
+  curl --location --request GET 'SERVER_IP:SERVER_PORT/users'
+  ```
+  * User's matching filter
+  ```
+  curl --location --request GET 'SERVER_IP:SERVER_PORT/users?address=USER_ADDRESS&name=USER_NAME'
+  ```
 * Get specific user
 ```
 curl --location --request GET 'SERVER_IP:SERVER_PORT/users/USER_ID'
